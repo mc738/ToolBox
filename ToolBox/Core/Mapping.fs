@@ -81,4 +81,3 @@ module Mapping =
                   Fields = f }
                 |> Ok
         | false -> Error "Not a record type."
-
