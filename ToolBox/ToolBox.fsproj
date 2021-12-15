@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Library.fs" />
+        <Compile Include="Core\Strings.fs" />
+        <Compile Include="Core\IO.fs" />
+        <Compile Include="Core\Streams.fs" />
+        <Compile Include="Core\TypeHelpers.fs" />
+        <Compile Include="Core\Mapping.fs" />
+        <Compile Include="Core\Hashing.fs" />
+        <Compile Include="Core\Encryption.fs" />
+        <Compile Include="Core\Passwords.fs" />
+        <Compile Include="AppEnvironment\ArgParser.fs" />
+    </ItemGroup>
+
+</Project>
