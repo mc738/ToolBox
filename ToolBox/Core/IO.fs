@@ -34,4 +34,10 @@ module ConsoleIO =
     
     let printWarning message = cprintfn ConsoleColor.DarkYellow message
     
-    let printDebug message = cprintfn ConsoleColor.DarkMagenta message 
+    let printDebug message =
+        #if DEBUG
+        cprintfn ConsoleColor.DarkMagenta message
+        #else
+        ()
+        #endif
+         
