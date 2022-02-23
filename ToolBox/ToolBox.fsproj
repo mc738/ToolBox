@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <Compile Include="Library.fs" />
+        <Compile Include="Core\Common.fs" />
         <Compile Include="Core\Strings.fs" />
         <Compile Include="Core\IO.fs" />
         <Compile Include="Core\Streams.fs" />
@@ -17,6 +18,8 @@
         <Compile Include="Core\Hashing.fs" />
         <Compile Include="Core\Encryption.fs" />
         <Compile Include="Core\Passwords.fs" />
+        <Compile Include="Core\Xml.fs" />
+        <Compile Include="Core\Http.fs" />
         <Compile Include="AppEnvironment\ArgParser.fs" />
     </ItemGroup>
 

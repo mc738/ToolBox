@@ -17,17 +17,27 @@ module FileIO =
             File.ReadAllBytes(path) |> Ok
         with
         | exn -> Error exn.Message
+        
+        
+    let readText (path: string) =
+        try
+            File.ReadAllText path |> Ok
+        with
+        | exn -> Error { Message = exn.Message; Exception = Some exn }
 
+    let writeText (path: string, content: string) =
+        try
+            File.WriteAllText(path, content) |> Ok
+        with
+        | exn -> Error { Message = exn.Message; Exception = Some exn }
 
 module ConsoleIO =
-    
-    
+        
     let cprintfn (color: ConsoleColor) message =
         Console.ForegroundColor <- color
         printfn $"{message}"
         Console.ResetColor()
-        
-        
+            
     let printSuccess message = cprintfn ConsoleColor.Green message
     
     let printError message = cprintfn ConsoleColor.Red message
