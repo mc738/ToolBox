@@ -13,7 +13,10 @@ module Helpers =
         try
             fn () |> Ok
         with
-        | exn -> Error exn.Message
+        | exn ->
+            { Message = exn.Message
+              Exception = Some exn }
+            |> Error
 
 [<RequireQualifiedAccess>]
 module Conversions =
@@ -26,3 +29,5 @@ module Conversions =
         bytes
         |> Array.fold (fun (sb: StringBuilder) b -> sb.AppendFormat("{0:x2}", b)) (StringBuilder(bytes.Length * 2))
         |> fun sb -> sb.ToString()
+        
+    //let bytesTo

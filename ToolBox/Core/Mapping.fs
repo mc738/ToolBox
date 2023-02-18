@@ -7,6 +7,12 @@ module Mapping =
     open System.Reflection
     open Microsoft.FSharp.Reflection
         
+    type CommandValue(name: string) =
+        
+        inherit Attribute()
+        
+        member att.Name = name
+        
     type ArgValueAttribute(shortName: string, longName: string) =
 
         inherit Attribute()
@@ -30,13 +36,19 @@ module Mapping =
           Type: Type
           MatchValues: string list }
     
+    let getCommandName (uci: UnionCaseInfo) =
+        uci.GetCustomAttributes(typeof<CommandValue>)
+        |> Array.tryHead
+        |> Option.map (fun att -> (att :?> CommandValue).Name)
+        |> Option.defaultWith (fun _ -> uci.Name)
+    
     let getUnionOption<'T> (cmd: string) =
         let t = typeof<'T>
 
         match FSharpType.IsUnion(t) with
         | true ->
             FSharpType.GetUnionCases(t)
-            |> Array.tryFind (fun uc -> String.Equals(uc.Name, cmd, StringComparison.OrdinalIgnoreCase))
+            |> Array.tryFind (fun uc -> String.Equals(getCommandName uc, cmd, StringComparison.OrdinalIgnoreCase))
             |> Option.bind
                 (fun uc ->
                     // Get the New[Option] method.
