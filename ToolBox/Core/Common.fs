@@ -12,8 +12,7 @@ module Helpers =
     let attempt<'R> (fn: unit -> 'R) =
         try
             fn () |> Ok
-        with
-        | exn ->
+        with exn ->
             { Message = exn.Message
               Exception = Some exn }
             |> Error

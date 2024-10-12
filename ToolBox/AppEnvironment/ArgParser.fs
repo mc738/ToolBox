@@ -1,6 +1,6 @@
 ﻿namespace ToolBox.AppEnvironment
 
-        
+
 open System
 open Microsoft.FSharp.Reflection
 open ToolBox.Core
@@ -9,7 +9,7 @@ open ToolBox.Core.Mapping
 module ArgParser =
 
     module Internal =
-   
+
         type ParameterSignature =
             { MatchValues: string list
               RequiresValue: bool }
@@ -17,15 +17,15 @@ module ArgParser =
         type OptionsSignature =
             { Parameters: ParameterSignature list }
 
-                member os.TryFind(key: string) =
-                    os.Parameters
-                    |> List.fold
-                        (fun r ps ->
-                            match r, ps.MatchValues |> List.contains key with
-                            | Some v, _ -> Some v
-                            | None, true -> Some ps
-                            | None, false -> None)
-                        None
+            member os.TryFind(key: string) =
+                os.Parameters
+                |> List.fold
+                    (fun r ps ->
+                        match r, ps.MatchValues |> List.contains key with
+                        | Some v, _ -> Some v
+                        | None, true -> Some ps
+                        | None, false -> None)
+                    None
 
         type Arg = { Key: string; Value: string }
 
@@ -47,12 +47,12 @@ module ArgParser =
 
         let createOptionSignature (mappedRecord: MappedRecord) =
             mappedRecord.Fields
-            |> Array.map
-                (fun f ->
-                    ({ MatchValues = f.MatchValues
-                       RequiresValue =
-                           String.Equals(f.Type.FullName, TypeHelpers.boolName, StringComparison.Ordinal)
-                           |> not }: ParameterSignature))
+            |> Array.map (fun f ->
+                ({ MatchValues = f.MatchValues
+                   RequiresValue =
+                     String.Equals(f.Type.FullName, TypeHelpers.boolName, StringComparison.Ordinal)
+                     |> not }
+                : ParameterSignature))
             |> fun r -> ({ Parameters = r |> List.ofArray })
 
         let createParameter (mo: MappedOption) (args: string list) =
@@ -74,11 +74,11 @@ module ArgParser =
                         let values =
                             mpi.Fields
                             |> Array.sortBy (fun mpi -> mpi.Ordinal)
-                            |> Array.map
-                                (fun f ->
-                                    match parsedArgs |> List.tryFind (fun pa -> f.MatchValues |> List.contains pa.Key) with
-                                    | Some v -> TypeHelpers.createObj f.Type v.Value
-                                    | None -> TypeHelpers.createDefault f.Type)
+                            |> Array.map (fun f ->
+                                match parsedArgs |> List.tryFind (fun pa -> f.MatchValues |> List.contains pa.Key) with
+                                | Some v -> TypeHelpers.createObj f.Type v.Value
+                                | None -> TypeHelpers.createDefault f.Type)
+
                         FSharpValue.MakeRecord(mpi.Type, values)
                     | Error e -> Error e
                 | false -> Error "Unsupported."
@@ -88,9 +88,7 @@ module ArgParser =
         |> List.tail // discard the app name.
         |> fun argv ->
             let (cmd, args) = argv.Head, argv.Tail
+
             match Mapping.getUnionOption<'T> cmd with
-            | Ok mo ->
-                Internal.createParameter mo args
-                |> Mapping.createOptions<'T> mo
-                |> Ok
+            | Ok mo -> Internal.createParameter mo args |> Mapping.createOptions<'T> mo |> Ok
             | Error e -> Error e
